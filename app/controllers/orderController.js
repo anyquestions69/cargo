@@ -1,4 +1,4 @@
-const {Order, Status} = require('../models/user')
+const {Order} = require('../models/user')
 const jwt = require('jsonwebtoken')
 
 const getPagingData = (data, page, limit) => {
@@ -51,7 +51,7 @@ class Manager{
                 },
                 points:[points]
             }, {new: true});
-             return res.send(site)
+             return res.send(order)
         } catch (error) {
             return res.status(404).send('Ошибка')
         }
@@ -63,7 +63,7 @@ class Manager{
     async add(req, res){
         try{
             let {trackId, sender, receiver, points} = req.body
-                let status = await Status.create({trackId, status:"Заказ создан", place:points[0].place})
+                //let status = await Status.create({trackId, status:"Заказ создан", place:points[0].place})
                 let order = await Order.create({
                     trackId,
                     sender: {
@@ -76,6 +76,7 @@ class Manager{
                         place:receiver.place
                     },
                     points:[points]
+
                 })
             return res.send(order)
         }catch(e){

@@ -27,10 +27,15 @@ const orderSchema = new Schema({
     }
   },
   points:[
-    {place:String}
+    { 
+      place:String,
+      status:String,
+      manager: {type: mongoose.Schema.Types.ObjectId, ref: 'Manager'},
+      date: Date
+    }
   ],
   status:{
-    type: mongoose.Schema.Types.ObjectId, ref: 'Status'
+    type: Number
   }
   
 }, {versionKey: false}, {timeStamps:true});
@@ -74,19 +79,11 @@ const managerSchema = new Schema({
     required:true
   }
 })
-const statusSchema = new Schema({
-  order:{type: mongoose.Schema.Types.ObjectId, ref: 'Order'},
-  status:{
-    type:String,
-    required:true,
-  },
-  place:{type: mongoose.Schema.Types.ObjectId, ref: 'Manager'}
-},{timeStamps:true})
+
 
 
 const Order = mongoose.model('Order', orderSchema)
 const User = mongoose.model('User', userSchema)
 const Admin = mongoose.model('Admin', adminSchema)
 const Manager = mongoose.model('Manager', managerSchema)
-const Status = mongoose.model('Status', statusSchema)
 module.exports = {Order, User, Admin, Manager, Status}
