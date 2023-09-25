@@ -2,7 +2,7 @@
 const express = require('express')
 const app = express()
 const connectDB = require('./config/database.js')
-const siteRouter = require('./routers/siteRouter.js')
+const orderRouter = require('./routers/orderRouter.js')
 const cors = require('cors')
 var cookieParser = require('cookie-parser');
 const jsonParser = express.json();
@@ -38,7 +38,7 @@ app.get('/', (_req, res) => {
   })
 })
 
-app.use('/sites', siteRouter)
+app.use('/orders', orderRouter)
 
 app.listen(3000, () => {
   console.log('Сервер запущен')
