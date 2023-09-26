@@ -1,13 +1,17 @@
 const express = require("express");
-const orderController = require("../controllers/orderController.js");
+const userController = require("../controllers/userController.js");
 const mw = require('../middleware/auth.js')
-const orderRouter = express.Router();
+const userRouter = express.Router();
+const adminRouter = express.Router()
 
-orderRouter.get("/", orderController.getAll);
-orderRouter.get("/:userId", orderController.getAll);
+userRouter.use('/admin', adminRouter)
+userRouter.get("/", userController.getAll);
+userRouter.get("/:userId", userController.getAll);
 
-orderRouter.post('/', orderController.add)
-orderRouter.post('/:userId', orderController.update)
-orderRouter.delete('/:userId', orderController.delete)
+userRouter.post('/register', userController.register)
+userRouter.post('/login', userController.login)
+userRouter.post('/logout', userController.logout)
+userRouter.post('/update', userController.update)
+userRouter.delete('/:userId', userController.delete)
  
-module.exports = orderRouter;
+module.exports = userRouter;

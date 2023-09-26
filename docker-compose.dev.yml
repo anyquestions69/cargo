@@ -9,8 +9,6 @@ services:
       - .env
     expose:
       - '3000'
-    volumes:
-      - ./app:/opt/server
     restart: always
     depends_on:
       - db

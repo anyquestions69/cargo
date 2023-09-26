@@ -1,5 +1,5 @@
 const {Order} = require('../models/user')
-const jwt = require('jsonwebtoken')
+
 
 const getPagingData = (data, page, limit) => {
     const { count: totalItems, rows: users } = data;
@@ -34,7 +34,19 @@ class Manager{
         }
         
     }
-
+    async nextPoint(req,res){
+        try {
+            let exists = await Order.findOne({trackId})
+            if(!exists)
+                return res.status(404).send('Такого заказа нет')
+            let order = await Order.findOneAndUpdate({trackId}, {
+               status:exists.status+1
+            }, {new: true});
+        } catch (error) {
+            console.log(error)
+            return res.status(404).send('Ошибка')
+        }
+    }
     async update(req,res){
         try {
             let {trackId, sender, receiver, points, status} = req.body
@@ -63,7 +75,7 @@ class Manager{
     async add(req, res){
         try{
             let {trackId, sender, receiver, points} = req.body
-                //let status = await Status.create({trackId, status:"Заказ создан", place:points[0].place})
+               
                 let order = await Order.create({
                     trackId,
                     sender: {
@@ -75,7 +87,7 @@ class Manager{
                         email:receiver.email,
                         place:receiver.place
                     },
-                    points:[points]
+                    points:points
 
                 })
             return res.send(order)
