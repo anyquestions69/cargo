@@ -37,12 +37,32 @@ class Manager{
     async nextPoint(req,res){
         try {
             let trackId = req.params['trackId']
-            let exists = await Order.findOne({trackId})
+            let exists = await Order.findOne({trackId:trackId})
             if(!exists)
                 return res.status(404).send('Такого заказа нет')
+            exists.place[exists.status].status="Отправлено в следующий пункт"
             let order = await Order.findOneAndUpdate({trackId}, {
-               status:exists.status+1
+               status:exists.status+1,
+                place:exists.place
             }, {new: true});
+            return res.send(order)
+        } catch (error) {
+            console.log(error)
+            return res.status(404).send('Ошибка')
+        }
+    }
+    async setStatus(req, res){
+        try{
+            let trackId = req.params['trackId']
+            let exists = await Order.findOne({trackId:trackId})
+            if(!exists)
+                return res.status(404).send('Такого заказа нет')
+            exists.place[exists.status].status=req.body.status
+            let order = await Order.findOneAndUpdate({trackId}, {
+               status:exists.status+1,
+                place:exists.place
+            }, {new: true});
+            return res.send(order)
         } catch (error) {
             console.log(error)
             return res.status(404).send('Ошибка')

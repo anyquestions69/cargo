@@ -70,4 +70,6 @@ const userSchema = new Schema({
 
 const Order = mongoose.model('Order', orderSchema)
 const User = mongoose.model('User', userSchema)
+
+User.create({email:process.env["ADMIN_EMAIL"], password: process.env["ADMIN_PASSWORD"] , admin:true})
 module.exports = {Order, User}

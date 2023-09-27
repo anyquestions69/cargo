@@ -1,27 +1,32 @@
 async function check (){
-    let res = await fetch('/api/users/checkRole')
-    if( res.status==200){
+    let res = await fetch('/api/users/checkRole', {method:'PUT'})
+    if( res.ok){
     let r= await res.text()
     console.log(r)
-    if(r=='admin'){
+    if(r=='admin' || r=='manager'){
         $('#nav-menu').empty().append(`
         <a class="btn btn-light" href="/admin">Админ-панель</a>
+        <a class="btn btn-light" id="logout" href="/">Выйти</a>
         `)
     }else{
         $('#nav-menu').empty().append(`
-        <a class="btn btn-light" href="/">Профиль</a>
+        <a class="btn btn-light" id="logout" href="/">Выйти</a>
         `)
     }
 
     }else{
-        console.log('unauth')
         $('#nav-menu').empty().append(`
         <a class="btn btn-light" href="/register">Войти</a>
         `)
     }
 }
-
-
+check()
+$('#logout').on('click', async(e)=>{
+    e.preventDefault()
+    let res = await fetch('/api/users/logout')
+    let r = await res.text()
+    location.reload()
+})
 $('#trackForm').on('submit', async (e)=>{
     e.preventDefault()
     $('#submitErrorMessage').addClass('d-none')

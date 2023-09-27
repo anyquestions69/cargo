@@ -21,9 +21,9 @@ async function show(){
               <div class="d-flex gap-2 w-100 justify-content-between">
                 <div>
                   <h6 class="mb-0">${r.email}</h6>
-                  <p class="mb-0 opacity-75"><p href="">Редактировать</p></p>
+                  <p class="mb-0 opacity-75">Редактировать</p>
                 </div>
-                <small class="opacity-50 text-nowrap">${day}.${month}.${year}</small>
+                <small class="opacity-50 text-nowrap">Менеджер</small>
               </div>
             </a>
               `)
@@ -34,9 +34,7 @@ async function show(){
               <div class="d-flex gap-2 w-100 justify-content-between">
                
                   <h6 class="mb-0">${r.email}</h6>
-                  <p class="mb-0 opacity-75"><p href="">Редактировать</p></p>
-           
-                <small class="opacity-50 text-nowrap">${day}.${month}.${year}</small>
+                  <p class="mb-0 opacity-75">Редактировать</p>
               </div>
             </a>
               `)

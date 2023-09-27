@@ -23,10 +23,10 @@ class Manager{
    
     async getOne(req,res){
         try{
-            let trackId = req.params['email']
-            let order = await User.findOne({trackId})
+            let trackId = req.params['userId']
+            let order = await User.findById(trackId)
             if(!order)
-                return res.status(404).send('Такого заказа нет')
+                return res.status(404).send('Такого пользователя нет')
             return res.send(order)
         }catch(e){
             console.log(e)
@@ -37,7 +37,7 @@ class Manager{
 
     async update(req,res){
         try {
-            let {email, newEmail, password, manager, place} = req.body
+            let {email, password, manager, place} = req.body
             let newData = {}
             if(manager)
                 newData.manager=true
@@ -47,7 +47,8 @@ class Manager{
                 newData.password=password
             if(place)
                 newData.place=place
-            let user = await User.findOneAndUpdate({id:req.params['userId']}, newData, {new: true});
+            console.log(newData)
+            let user = await User.findOneAndUpdate({_id:req.params['userId']}, newData, {new: true});
              return res.send(user)
         } catch (error) {
             return res.status(404).send('Ошибка')
@@ -56,10 +57,10 @@ class Manager{
     }
     async checkRole(req, res){
         if(req.user){
-        if(req.user.manager){
-            return res.send('manager')
-        }else if(req.user.admin){
+        if(req.user.admin){
             return res.send('admin')
+        }else if(req.user.manager){
+            return res.send('manager')
         }else{
             return res.send('user')
         }
