@@ -6,7 +6,7 @@ const adminRouter = express.Router()
 
 userRouter.use('/admin', adminRouter)
 userRouter.get("/", userController.getAll);
-userRouter.get("/:userId", userController.getAll);
+userRouter.get("/:userId", userController.getOne);
 
 userRouter.get('/checkRole', mw.isAuth, userController.checkRole)
 
