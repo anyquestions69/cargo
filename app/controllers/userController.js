@@ -37,16 +37,35 @@ class Manager{
 
     async update(req,res){
         try {
-            let {email, newEmail, password} = req.body
+            let {email, newEmail, password, manager, place} = req.body
             let newData = {}
-            let order = await User.findOneAndUpdate({email}, {
-               password
-            }, {new: true});
-             return res.send(order)
+            if(manager)
+                newData.manager=true
+            if(newEmail)
+                newData.email=newEmail
+            if(password)
+                newData.password=password
+            if(place)
+                newData.place=place
+            let user = await User.findOneAndUpdate({id:req.params['userId']}, newData, {new: true});
+             return res.send(user)
         } catch (error) {
             return res.status(404).send('Ошибка')
         }
        
+    }
+    async checkRole(req, res){
+        if(req.user){
+        if(req.user.manager){
+            return res.send('manager')
+        }else if(req.user.admin){
+            return res.send('admin')
+        }else{
+            return res.send('user')
+        }
+        }else{
+            return res.status(404).send('Ошибка')
+        }
     }
 
     async setManager(req, res){
@@ -65,7 +84,7 @@ class Manager{
                     admin:false,
                     manager:false
                 })
-                const token = jwt.sign({email:user.email, admin:user.admin}, process.env.TOKEN_SECRET, { expiresIn: '3600s' });
+                const token = jwt.sign({email:user.email, admin:user.admin, manager:user.manager}, process.env.TOKEN_SECRET, { expiresIn: '3600s' });
                 return res.cookie('user',token, { maxAge: 900000, httpOnly: true }).send(user)
         }catch(e){
             console.log(e)
@@ -95,11 +114,11 @@ class Manager{
 
     async delete(req,res){
         try {
-            let trackId = req.params['trackId']
-            let order = await Order.findOne({trackId})
+            let userId = req.params['userId']
+            let order = await User.findById({userId})
             if(!order)
-                return res.status(404).send('Такого заказа нет')
-            let res = await User.deleteOne({trackId})
+                return res.status(404).send('Такого пользователя нет')
+            let res = await User.deleteOne({userId})
             return res.send('Успешно удалено')
         } catch (error) {
             return res.status(404).send('Ошибка')

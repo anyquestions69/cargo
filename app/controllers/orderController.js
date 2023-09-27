@@ -36,6 +36,7 @@ class Manager{
     }
     async nextPoint(req,res){
         try {
+            let trackId = req.params['trackId']
             let exists = await Order.findOne({trackId})
             if(!exists)
                 return res.status(404).send('Такого заказа нет')
@@ -50,7 +51,7 @@ class Manager{
     async update(req,res){
         try {
             let {trackId, sender, receiver, points, status} = req.body
-            let order = await Order.findOneAndUpdate({trackId}, {
+            let order = await Order.findOneAndUpdate({trackId:trackId}, {
                 trackId,
                 sender: {
                     name: sender.name, 
@@ -61,7 +62,8 @@ class Manager{
                     email:receiver.email,
                     place:receiver.place
                 },
-                points:[points]
+                points:[points],
+                status:status
             }, {new: true});
              return res.send(order)
         } catch (error) {
@@ -75,7 +77,8 @@ class Manager{
     async add(req, res){
         try{
             let {trackId, sender, receiver, points} = req.body
-               
+            if(points.length==0)
+                return res.status(404).send('Укажите промежуточные пункты')
                 let order = await Order.create({
                     trackId,
                     sender: {
@@ -103,9 +106,10 @@ class Manager{
         try {
             let trackId = req.params['trackId']
             let order = await Order.findOne({trackId})
+            console.log(order)
             if(!order)
                 return res.status(404).send('Такого заказа нет')
-            let res = await User.deleteOne({trackId})
+            let res = await User.deleteOne({trackId:trackId})
             return res.send('Успешно удалено')
         } catch (error) {
             return res.status(404).send('Ошибка')

@@ -1,4 +1,16 @@
 @charset "UTF-8";
+
+.sidenav {
+height: 100%; /* Full-height: remove this if you want "auto" height */
+width: 240px; /* Set the width of the sidebar */
+position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+z-index: 1; /* Stay on top */
+top: 0; /* Stay at the top */
+left: 0;
+overflow-x: hidden; /* Disable horizontal scroll */
+padding-top: 20px;
+}
+
 /*!
 * Start Bootstrap - Landing Page v6.0.6 (https://startbootstrap.com/theme/landing-page)
 * Copyright 2013-2023 Start Bootstrap
@@ -83,6 +95,7 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  
 }
 
 @media (prefers-reduced-motion: no-preference) {

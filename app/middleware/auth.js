@@ -1,4 +1,4 @@
-const Site = require('../models/user')
+const {User} = require('../models/user')
 const config = process.env;
 const jwt = require('jsonwebtoken')
 
@@ -8,10 +8,11 @@ class Auth{
         const token = req.cookies.site
         
         if(token){
-        await jwt.verify(token, process.env.TOKEN_SECRET, async(err, site) => {
-            let exists = await Site.findOne({url:site.site})
+        await jwt.verify(token, process.env.TOKEN_SECRET, async(err, user) => {
+            let exists = await User.findOne({email:user.email})
+            console.log(exists)
             if(exists){
-                req.site = exists  
+                req.user = exists  
                 next()
             }else{return res.status(404).send('error')}
             
@@ -20,6 +21,20 @@ class Auth{
             return res.status(404).send('error')
         }
         
+    }
+    async isManager(req,res,next){
+        if(req.user.manager){
+            next()
+        }else{return res.status(404).send('error')}
+        
+    
+    }
+    async isAdmin(req,res,next){
+        if(req.user.manager){
+            next()
+        }else{return res.status(404).send('error')}
+        
+    
     }
    
 }

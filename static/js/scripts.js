@@ -1,3 +1,27 @@
+async function check (){
+    let res = await fetch('/api/users/checkRole')
+    if( res.status==200){
+    let r= await res.text()
+    console.log(r)
+    if(r=='admin'){
+        $('#nav-menu').empty().append(`
+        <a class="btn btn-light" href="/admin">Админ-панель</a>
+        `)
+    }else{
+        $('#nav-menu').empty().append(`
+        <a class="btn btn-light" href="/">Профиль</a>
+        `)
+    }
+
+    }else{
+        console.log('unauth')
+        $('#nav-menu').empty().append(`
+        <a class="btn btn-light" href="/register">Войти</a>
+        `)
+    }
+}
+
+
 $('#trackForm').on('submit', async (e)=>{
     e.preventDefault()
     $('#submitErrorMessage').addClass('d-none')

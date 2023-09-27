@@ -8,10 +8,12 @@ userRouter.use('/admin', adminRouter)
 userRouter.get("/", userController.getAll);
 userRouter.get("/:userId", userController.getAll);
 
+userRouter.get('/checkRole', mw.isAuth, userController.checkRole)
+
 userRouter.post('/register', userController.register)
 userRouter.post('/login', userController.login)
-userRouter.post('/logout', userController.logout)
-userRouter.post('/update', userController.update)
+userRouter.post('/logout', mw.isAuth, userController.logout)
+userRouter.post('/update/:userId', mw.isAuth, userController.update)
 userRouter.delete('/:userId', userController.delete)
  
 module.exports = userRouter;
