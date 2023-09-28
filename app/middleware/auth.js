@@ -9,6 +9,7 @@ class Auth{
         
         if(token){
         await jwt.verify(token, process.env.TOKEN_SECRET, async(err, user) => {
+            console.log(user)
             let exists = await User.findOne({email:user.email})
            
             if(exists){
@@ -26,7 +27,7 @@ class Auth{
     async isManager(req,res,next){
         if(req.user.manager){
             next()
-        }else{return res.status(404).send('error')}
+        }else{return res.status(404).send('Вы не менеджер')}
         
     
     }
@@ -38,9 +39,9 @@ class Auth{
             return res.status(404).send('Заказ находится не у вас')
     }
     async isAdmin(req,res,next){
-        if(req.user.manager){
+        if(req.user.admin){
             next()
-        }else{return res.status(404).send('error')}
+        }else{return res.status(404).send('Вы не админ')}
         
     
     }

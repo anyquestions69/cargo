@@ -25,6 +25,7 @@ $('#logout').on('click', async(e)=>{
     e.preventDefault()
     let res = await fetch('/api/users/logout')
     let r = await res.text()
+    document.cookie = "user= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
     location.reload()
 })
 $('#trackForm').on('submit', async (e)=>{

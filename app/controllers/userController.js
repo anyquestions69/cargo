@@ -41,17 +41,16 @@ class Manager{
             let newData = {}
             if(manager)
                 newData.manager=true
-            if(newEmail)
-                newData.email=newEmail
             if(password)
                 newData.password=password
             if(place)
                 newData.place=place
             console.log(newData)
             let user = await User.findOneAndUpdate({_id:req.params['userId']}, newData, {new: true});
+            console.log(user)
              return res.send(user)
         } catch (error) {
-            return res.status(404).send('Ошибка')
+            return res.status(404).send('Данные не обновлены')
         }
        
     }
@@ -85,7 +84,7 @@ class Manager{
                     admin:false,
                     manager:false
                 })
-                const token = jwt.sign({email:user.email, admin:user.admin, manager:user.manager}, process.env.TOKEN_SECRET, { expiresIn: '3600s' });
+                const token = jwt.sign({email:user.email, admin:user.admin, manager:user.manager}, process.env.TOKEN_SECRET, { expiresIn: '12800s' });
                 return res.cookie('user',token, { maxAge: 900000, httpOnly: true }).send(user)
         }catch(e){
             console.log(e)
@@ -99,7 +98,7 @@ class Manager{
             if(!user)
                 return res.status(401).send({error:'Такого пользователя не существует'})
             if(user.password==password){
-                const token = jwt.sign({email:user.email, admin:user.admin}, process.env.TOKEN_SECRET, { expiresIn: '3600s' });
+                const token = jwt.sign({email:user.email, admin:user.admin}, process.env.TOKEN_SECRET, { expiresIn: '12800s' });
                 return res.cookie('user',token, { maxAge: 900000, httpOnly: true }).send(token)
             }else{
                 return res.status(404).send({error:'Неверный пароль'})

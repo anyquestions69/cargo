@@ -23,9 +23,9 @@ if(response.ok){
     <div class="d-flex gap-2 w-100 justify-content-between">
       <div>
         <h6 class="mb-0">${r.trackId}</h6>
-        <p class="mb-0 opacity-75">${r.points[0].place||''}</p>
+        <p class="mb-0 opacity-75">${r.points[parseInt(r.status)].place||r.receiver.place}</p>
       </div>
-      <small class="opacity-50 text-nowrap">${r.points[0].status||''}</small>
+      <small class="opacity-50 text-nowrap">${r.points[parseInt(r.status)].status||'Доставлено'}</small>
     </div>
   </a>
     `)
@@ -39,9 +39,9 @@ if(response.ok){
       <div class="d-flex gap-2 w-100 justify-content-between">
         <div>
           <h6 class="mb-0">${r.trackId}</h6>
-          <p class="mb-0 opacity-75">${r.points[0].place||''}</p>
+          <p class="mb-0 opacity-75">${r.points[parseInt(r.status)].place||r.receiver.place}</p>
         </div>
-        <small class="opacity-50 text-nowrap">${r.points[0].status||''}</small>
+        <small class="opacity-50 text-nowrap">${r.points[parseInt(r.status)].status||'Доставлено'}</small>
       </div>
     </a>
       `)

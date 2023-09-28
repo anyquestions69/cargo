@@ -40,10 +40,16 @@ class Manager{
             let exists = await Order.findOne({trackId:trackId})
             if(!exists)
                 return res.status(404).send('Такого заказа нет')
-            exists.place[exists.status].status="Отправлено в следующий пункт"
+            console.log(exists.points[parseInt(exists.status)])
+            exists.points[parseInt(exists.status)].status="Отправлено в следующий пункт"
+            exists.points[parseInt(exists.status)].date=Date.now()
+            console.log(exists.place)
+            console.log(exists.status)
+
             let order = await Order.findOneAndUpdate({trackId}, {
                status:exists.status+1,
-                place:exists.place
+                points:exists.points,
+                
             }, {new: true});
             return res.send(order)
         } catch (error) {
@@ -57,15 +63,15 @@ class Manager{
             let exists = await Order.findOne({trackId:trackId})
             if(!exists)
                 return res.status(404).send('Такого заказа нет')
-            exists.place[exists.status].status=req.body.status
+            exists.points[exists.status].status=req.body.status
+            exists.points[exists.status].date = Date.now()
             let order = await Order.findOneAndUpdate({trackId}, {
-               status:exists.status+1,
-                place:exists.place
+                points:exists.points
             }, {new: true});
             return res.send(order)
         } catch (error) {
             console.log(error)
-            return res.status(404).send('Ошибка')
+            return res.status(404).send('Ошибка статус не установлен')
         }
     }
     async update(req,res){
@@ -97,22 +103,23 @@ class Manager{
     async add(req, res){
         try{
             let {trackId, sender, receiver, points} = req.body
+            console.log(points)
             if(points.length==0)
                 return res.status(404).send('Укажите промежуточные пункты')
-                let order = await Order.create({
-                    trackId,
-                    sender: {
-                        name: sender.name, 
-                        place: sender.place
-                    },
-                    receiver:{
-                        name:receiver.name,
-                        email:receiver.email,
-                        place:receiver.place
-                    },
-                    points:points
+            let order = await Order.create({
+                trackId,
+                sender: {
+                    name: sender.name, 
+                    place: sender.place
+                },
+                receiver:{
+                    name:receiver.name,
+                    email:receiver.email,
+                    place:receiver.place
+                },
+                points:points
 
-                })
+            })
             return res.send(order)
         }catch(e){
             console.log(e)
