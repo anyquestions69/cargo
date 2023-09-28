@@ -1,15 +1,28 @@
 async function showUser(){
     let id =window.location.href.split('?id=')[1]
-    let response = await fetch('/api/orders/'+id,{
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8'
+    let checkManager = await fetch('/api/orders/check/'+id)
+    if(checkManager.ok){
+        let response = await fetch('/api/orders/'+id,{
+            method: 'GET',
+            headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+            }
+        })
+        if(response.ok){    
+            let res = await response.json()
+            console.log(res)
+            $('#orderId').text('Заказ '+ res.trackId)
+            if(res.status==res.points.length){
+                $('#pointsList').empty().append('<p>Заказ доставлен</p>')
+                $('#moveSubmit').remove()
+                $('#statusSubmit').remove()
+            }else{
+                $('#status').val(res.points[res.status].status)
+            }
         }
-    })
-    if(response.ok){    
-        let res = await response.json()
-        console.log(res)
-        $('#status').val(res.points[res.status].status)
+    }else{
+        alert('Товар не в вашем пункте')
+        window.location.href="/admin"
     }
 }
 showUser()

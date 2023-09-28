@@ -1,4 +1,4 @@
-const {Order} = require('../models/user')
+const {Order, User} = require('../models/user')
 
 
 const getPagingData = (data, page, limit) => {
@@ -13,8 +13,27 @@ class Manager{
 
     async getAll(req,res){
         try{
+            
             let orders = await Order.find({})
             return res.send(orders)
+        }catch(e){
+            console.log(e)
+            return res.status(404).send('Ошибка')
+        }
+    }
+
+    async getAllForManager(req,res){
+        try{
+            let user = await User.findOne({email:req.user.email})
+            let orders = await Order.find({})
+            let ordersArr=[]
+            for(let o of orders){
+                if(o.status==o.points.length)
+                    continue
+                if(o.points[parseInt(o.status)].place==user.place)
+                    ordersArr.push(o)
+            }
+            return res.send(ordersArr)
         }catch(e){
             console.log(e)
             return res.status(404).send('Ошибка')
@@ -40,7 +59,9 @@ class Manager{
             let exists = await Order.findOne({trackId:trackId})
             if(!exists)
                 return res.status(404).send('Такого заказа нет')
-            console.log(exists.points[parseInt(exists.status)])
+            if(exists.status==exists.points.length){
+                return res.status(404).send('Заказ уже доставлен')
+            }
             exists.points[parseInt(exists.status)].status="Отправлено в следующий пункт"
             exists.points[parseInt(exists.status)].date=Date.now()
             console.log(exists.place)
@@ -52,6 +73,28 @@ class Manager{
                 
             }, {new: true});
             return res.send(order)
+        } catch (error) {
+            console.log(error)
+            return res.status(404).send('Ошибка')
+        }
+    }
+    async checkPrevilege(req,res){
+        try {
+            let trackId = req.params['trackId']
+            let exists = await Order.findOne({trackId:trackId})
+            if(!exists)
+                return res.status(404).send('Такого заказа нет')
+            if(exists.status==exists.points.length){
+                return res.send(exists)
+            }
+            let user = await User.findOne({email:req.user.email})
+            if(exists.points[parseInt(exists.status)].address!=user.place){
+                return res.status(404).send('Товар не в вашем пункте')
+                
+            }else{
+                return res.status(200).send('Товар в вашем пункте')
+            }
+
         } catch (error) {
             console.log(error)
             return res.status(404).send('Ошибка')

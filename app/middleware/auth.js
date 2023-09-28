@@ -5,23 +5,30 @@ const jwt = require('jsonwebtoken')
 class Auth{
     
     async isAuth(req,res,next){
-        const token = req.cookies.user
+        try {
+            const token = req.cookies.user
         
-        if(token){
-        await jwt.verify(token, process.env.TOKEN_SECRET, async(err, user) => {
-            console.log(user)
-            let exists = await User.findOne({email:user.email})
-           
-            if(exists){
-                req.user = exists  
-                next()
-            }else{console.log('Неверный токен');return res.status(404).send('Неверный токен')}
-            
-        })
-        }else{
-            console.log('Error');
+            if(token){
+            await jwt.verify(token, process.env.TOKEN_SECRET, async(err, user) => {
+                console.log(user.email)
+                let email = await user.email
+                let exists = await User.findOne({email:email})
+               
+                if(exists){
+                    req.user = exists  
+                    next()
+                }else{console.log('Неверный токен');return res.status(404).send('Неверный токен')}
+                
+            })
+            }else{
+                console.log('Error');
+                return res.status(404).send('Токен отсутствует')
+            }
+        } catch (error) {
+            console.log('unauthorized')
             return res.status(404).send('Ошибка')
         }
+       
         
     }
     async isManager(req,res,next){
@@ -42,6 +49,13 @@ class Auth{
         if(req.user.admin){
             next()
         }else{return res.status(404).send('Вы не админ')}
+        
+    
+    }
+    async isAdminOrManager(req,res,next){
+        if(req.user.admin || req.user.manager){
+            next()
+        }else{return res.status(404).send('Вы не админ и не менеджер')}
         
     
     }

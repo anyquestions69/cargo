@@ -5,29 +5,29 @@ async function check (){
     console.log(r)
     if(r=='admin' || r=='manager'){
         $('#nav-menu').empty().append(`
-        <a class="btn btn-light" href="/admin">Админ-панель</a>
-        <a class="btn btn-light" id="logout" href="/">Выйти</a>
+        <a class="btn btn-light me-3" href="/admin">Админ-панель</a>
+        <span class="btn btn-light" id="logoutBtn" onclick=logout()>Выйти</span>
         `)
     }else{
         $('#nav-menu').empty().append(`
-        <a class="btn btn-light" id="logout" href="/">Выйти</a>
+        <p class="btn btn-light" id="logoutBtn" onclick=logout()>Выйти</p>
         `)
     }
 
     }else{
         $('#nav-menu').empty().append(`
-        <a class="btn btn-light" href="/register">Войти</a>
+        <a class="btn btn-light" href="/login">Войти</a>
         `)
     }
 }
 check()
-$('#logout').on('click', async(e)=>{
-    e.preventDefault()
+async function logout(){
     let res = await fetch('/api/users/logout')
     let r = await res.text()
-    document.cookie = "user= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+    console.log(r)
+    //document.cookie = "user=; expires = Thu, 01 Jan 1970 00:00:00 GMT"
     location.reload()
-})
+}
 $('#trackForm').on('submit', async (e)=>{
     e.preventDefault()
     $('#submitErrorMessage').addClass('d-none')
@@ -51,7 +51,7 @@ $('#trackForm').on('submit', async (e)=>{
         $('#routeTable').empty()
         let dateStart=new Date(order.createdAt)
         let day = dateStart.getDate();
-        let month = dateStart.getMonth();
+        let month = dateStart.getMonth()+1;
         let year = dateStart.getFullYear();
         $('#routeTable').append(`
         <tr>
@@ -61,21 +61,44 @@ $('#trackForm').on('submit', async (e)=>{
          </tr>
         `)
         for(let p of order.points){
+            let pointDate = new Date(p.date)
+            if (pointDate.getDate()!=NaN){
             $('#routeTable').append(`
             <tr>
-                <td>${p.date||''}</td>
+                <td>${pointDate.getDate()+'.'+(pointDate.getMonth()+1)+'.'+pointDate.getFullYear()||''}</td>
                 <td>${p.status||''}</td>
                 <td>${p.place}</td>
              </tr>
             `)
+            }else{
+                $('#routeTable').append(`
+            <tr>
+                <td>${''}</td>
+                <td>${p.status||''}</td>
+                <td>${p.place}</td>
+             </tr>
+            `)
+            }
         }
-        $('#routeTable').append(`
-        <tr>
-            <td></td>
-            <td></td>
-            <td>${order.receiver.place}</td>
-         </tr>
-        `)
+        if(order.status==order.points.length){
+            let deliverDate = new Date(order.points[order.status-1].date)
+            $('#routeTable').append(`
+            <tr>
+                <td>${deliverDate.getDate()+'.'+(deliverDate.getMonth()+1)+'.'+deliverDate.getFullYear()}</td>
+                <td>Доставлено получателю</td>
+                <td>${order.receiver.place}</td>
+             </tr>
+            `)
+        }else{
+            $('#routeTable').append(`
+            <tr>
+                <td></td>
+                <td></td>
+                <td>${order.receiver.place}</td>
+             </tr>
+            `)
+        }
+        
         $('#submitSuccessMessage').removeClass('d-none')
         $([document.documentElement, document.body]).animate({
             scrollTop: $("#submitSuccessMessage").offset().top
