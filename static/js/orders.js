@@ -203,4 +203,5 @@ $('#importXls').on('submit', async (e)=>{
   })
   let text = await response.json()
   console.log(text)
+  location.reload()
 })
