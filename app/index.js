@@ -7,8 +7,22 @@ const userRouter = require('./routers/userRouter.js')
 const cors = require('cors')
 var cookieParser = require('cookie-parser');
 const jsonParser = express.json();
+var multer      = require('multer'); 
+var importXls = require('./importXls.js') 
 
 connectDB()
+   
+var storage = multer.diskStorage({  
+  destination:(req,file,cb)=>{  
+      cb(null,'./uploads');  
+  },  
+  filename:(req,file,cb)=>{  
+      cb(null,file.originalname);  
+  }  
+});  
+ 
+var upload = multer({storage:storage});  
+
 app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
@@ -42,6 +56,8 @@ app.get('/', (_req, res) => {
 app.use('/orders', orderRouter)
 app.use('/users', userRouter)
 
+
+app.post('/upload', upload.single('table'), importXls)
 app.listen(3000, () => {
   console.log('Сервер запущен')
   console.log('server started')

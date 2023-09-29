@@ -10,7 +10,6 @@ class Auth{
         
             if(token){
             await jwt.verify(token, process.env.TOKEN_SECRET, async(err, user) => {
-                console.log(user.email)
                 let email = await user.email
                 let exists = await User.findOne({email:email})
                

@@ -32,7 +32,7 @@ $('#trackForm').on('submit', async (e)=>{
     e.preventDefault()
     $('#submitErrorMessage').addClass('d-none')
     let str = $('#trackId').val()
-    let trackId = filter(str)
+    let trackId = str
     console.log(trackId)
     let response = await fetch('/api/orders/'+trackId,{
         method: 'GET',
@@ -67,7 +67,7 @@ $('#trackForm').on('submit', async (e)=>{
             <tr>
                 <td>${pointDate.getDate()+'.'+(pointDate.getMonth()+1)+'.'+pointDate.getFullYear()||''}</td>
                 <td>${p.status||''}</td>
-                <td>${p.place}</td>
+                <td>${p.place||''}</td>
              </tr>
             `)
             }else{
@@ -75,7 +75,7 @@ $('#trackForm').on('submit', async (e)=>{
             <tr>
                 <td>${''}</td>
                 <td>${p.status||''}</td>
-                <td>${p.place}</td>
+                <td>${p.place||''}</td>
              </tr>
             `)
             }
@@ -86,7 +86,7 @@ $('#trackForm').on('submit', async (e)=>{
             <tr>
                 <td>${deliverDate.getDate()+'.'+(deliverDate.getMonth()+1)+'.'+deliverDate.getFullYear()}</td>
                 <td>Доставлено получателю</td>
-                <td>${order.receiver.place}</td>
+                <td>${order.receiver.place||''}</td>
              </tr>
             `)
         }else{
@@ -94,7 +94,7 @@ $('#trackForm').on('submit', async (e)=>{
             <tr>
                 <td></td>
                 <td></td>
-                <td>${order.receiver.place}</td>
+                <td>${order.receiver.place||''}</td>
              </tr>
             `)
         }

@@ -1,7 +1,7 @@
 async function showUser(){
     let id =window.location.href.split('?id=')[1]
-    let checkManager = await fetch('/api/orders/check/'+id)
-    if(checkManager.ok){
+    let checkManager = true//await fetch('/api/orders/check/'+id)
+    if(checkManager){
         let response = await fetch('/api/orders/'+id,{
             method: 'GET',
             headers: {
