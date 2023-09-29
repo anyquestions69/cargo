@@ -8,11 +8,13 @@ async function showUser(){
     })
     if(response.ok){    
         let res = await response.json()
+        if('sender' in res & 'receiver' in res){
         $('#senderName').val(res.sender.name)
         $('#senderAddress').val(res.sender.place)
         $('#receiverName').val(res.receiver.name)
         $('#receiverAddress').val(res.receiver.place)
         $('#receiverEmail').val(res.receiver.email)
+        }
         $('#trackId').val(res.trackId)
         
         

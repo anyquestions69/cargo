@@ -44,10 +44,12 @@ $('#trackForm').on('submit', async (e)=>{
         let order = await response.json()
     
         $('#orderNumber').html(order.trackId)
-        $('#senderName').text(order.sender.name)
-        $('#addressFrom').text(order.sender.place)
-        $('#receiverName').text(order.receiver.name)
-        $('#addressWhere').text(order.receiver.place)
+        if('sender' in order & 'receiver' in order){
+            $('#senderName').text(order.sender.name)
+            $('#addressFrom').text(order.sender.place)
+            $('#receiverName').text(order.receiver.name)
+            $('#addressWhere').text(order.receiver.place)
+        
         $('#routeTable').empty()
         let dateStart=new Date(order.createdAt)
         let day = dateStart.getDate();
@@ -98,7 +100,7 @@ $('#trackForm').on('submit', async (e)=>{
              </tr>
             `)
         }
-        
+    }
         $('#submitSuccessMessage').removeClass('d-none')
         $([document.documentElement, document.body]).animate({
             scrollTop: $("#submitSuccessMessage").offset().top

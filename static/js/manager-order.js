@@ -12,6 +12,7 @@ async function showUser(){
             let res = await response.json()
             console.log(res)
             $('#orderId').text('Заказ '+ res.trackId)
+            if('sender' in order & 'receiver' in order){
             if(res.status==res.points.length){
                 $('#pointsList').empty().append('<p>Заказ доставлен</p>')
                 $('#moveSubmit').remove()
@@ -19,6 +20,7 @@ async function showUser(){
             }else{
                 $('#status').val(res.points[res.status].status)
             }
+        }
         }
     }else{
         alert('Товар не в вашем пункте')

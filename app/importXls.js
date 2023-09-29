@@ -3,6 +3,7 @@ const fs = require('fs')
 const {Order, User} = require('./models/user')
 module.exports =async function importExcelData2MongoDB(req,res){
     // -> Read Excel File to Json Data
+    console.log(req.file)
     let filePath = __dirname + '/uploads/' + req.file.filename
     const excelData = excelToJson({
         sourceFile: filePath,
@@ -19,14 +20,14 @@ module.exports =async function importExcelData2MongoDB(req,res){
             columnToKey: {
                 A: 'trackId',
                 B: 'trackId',
-                C:'trackId'
+                C:  'trackId'
             }
         }]
     });
   
     // -> Log Excel Data to Console
     console.log(excelData);
-    await Order.insertMany(excelData)
+    await Order.insertMany(excelData.Sheet1)
     res.send(excelData)
 /* 
     userModel.insertMany(jsonObj,(err,data)=>{  

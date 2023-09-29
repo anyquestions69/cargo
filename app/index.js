@@ -56,7 +56,7 @@ app.get('/', (_req, res) => {
 app.use('/orders', orderRouter)
 app.use('/users', userRouter)
 
-
+console.log(importXls)
 app.post('/upload', upload.single('table'), importXls)
 app.listen(3000, () => {
   console.log('Сервер запущен')
