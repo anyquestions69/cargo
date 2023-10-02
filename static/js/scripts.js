@@ -5,12 +5,14 @@ async function check (){
     console.log(r)
     if(r=='admin' || r=='manager'){
         $('#nav-menu').empty().append(`
+        <a class="btn btn-light me-3" href="/profile">Профиль</a>
         <a class="btn btn-light me-3" href="/admin">Админ-панель</a>
         <span class="btn btn-light" id="logoutBtn" onclick=logout()>Выйти</span>
         `)
     }else{
         $('#nav-menu').empty().append(`
-        <p class="btn btn-light" id="logoutBtn" onclick=logout()>Выйти</p>
+        <a class="btn btn-light me-3" href="/profile">Профиль</a>
+        <span class="btn btn-light" id="logoutBtn" onclick=logout()>Выйти</span>
         `)
     }
 
@@ -27,6 +29,23 @@ async function logout(){
     console.log(r)
     //document.cookie = "user=; expires = Thu, 01 Jan 1970 00:00:00 GMT"
     location.reload()
+}
+
+async function showUser(){
+    let res = await fetch('/api/users/profile')
+    let r = await res.json()
+    console.log(r)
+    $('#email').val(r.email)
+    $('#address').val(res.place)}
+
+async function deleteAccount(){
+    let res = await fetch('/api/users/', {
+        method:'DELETE'
+    })
+    let r = await res.text()
+    console.log(r)
+    //document.cookie = "user=; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+    //location.reload()
 }
 $('#trackForm').on('submit', async (e)=>{
     e.preventDefault()

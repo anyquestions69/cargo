@@ -35,6 +35,20 @@ class Manager{
         
     }
 
+    async profile(req,res){
+        try{
+            
+            let order = await User.findOne({email:req.user.email})
+            if(!order)
+                return res.status(404).send('Такого пользователя нет')
+            return res.send(order)
+        }catch(e){
+            console.log(e)
+            return res.status(404).send('Ошибка')
+        }
+        
+    }
+
     async update(req,res){
         try {
             let {email, password, manager, place} = req.body
@@ -114,20 +128,21 @@ class Manager{
 
     async delete(req,res){
         try {
-            let userId = req.params['userId']
            
-            let order = await User.findById({userId})
+            let order = await User.findOne({email:req.user.email})
             if(!order)
                 return res.status(404).send('Такого пользователя нет')
             if(req.user.email==order.email || req.user.admin){
-                let res = await User.deleteOne({userId})
+                let result = await User.deleteOne({email:req.user.email})
+                console.log(res)
                 return res.send('Успешно удалено')
             }else{
                 return res.status(404).send('Вы не можете удалить этого пользователя')
             }
            
         } catch (error) {
-            return res.status(404).send('Ошибка')
+            console.log(error)
+            return res.status(404).send(error)
         }
     }
 
