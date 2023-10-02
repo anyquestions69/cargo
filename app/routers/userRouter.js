@@ -13,7 +13,7 @@ userRouter.post('/register', userController.register)
 userRouter.post('/login', userController.login)
 
 userRouter.post('/update/:userId', mw.isAuth,  mw.isAdminOrManager, userController.update)
-userRouter.delete('/:userId', mw.isAuth, mw.isAdminOrManager, userController.delete)
+userRouter.delete('/:userId', mw.isAuth,  userController.delete)
 
  
 module.exports = userRouter;

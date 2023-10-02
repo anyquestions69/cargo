@@ -77,7 +77,7 @@ class Manager{
             let {email, password} = req.body
                 let exists = await User.findOne({email})
                 if(exists)
-                    return res.status(404).send('Пользователь с таким email уже существует')
+                    return res.status(404).send({error:'Пользователь с таким email уже существует'})
                 let user = await User.create({
                     email,
                     password,
@@ -88,7 +88,7 @@ class Manager{
                 return res.cookie('user',token, { maxAge: 900000, httpOnly: true }).send(user)
         }catch(e){
             console.log(e)
-            return res.status(404).send('Ошибка')
+            return res.status(404).send({error:'Ошибка'})
         }
     }
     async login(req,res){
@@ -115,11 +115,17 @@ class Manager{
     async delete(req,res){
         try {
             let userId = req.params['userId']
+           
             let order = await User.findById({userId})
             if(!order)
                 return res.status(404).send('Такого пользователя нет')
-            let res = await User.deleteOne({userId})
-            return res.send('Успешно удалено')
+            if(req.user.email==order.email || req.user.admin){
+                let res = await User.deleteOne({userId})
+                return res.send('Успешно удалено')
+            }else{
+                return res.status(404).send('Вы не можете удалить этого пользователя')
+            }
+           
         } catch (error) {
             return res.status(404).send('Ошибка')
         }
