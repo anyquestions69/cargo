@@ -22,6 +22,22 @@ module.exports =async function importExcelData2MongoDB(req,res){
                 B: 'trackId',
                 C:  'trackId'
             }
+        },
+        {
+            // Excel Sheet Name
+            name: 'Лист1',
+  
+            // Header Row -> be skipped and will not be present at our result object.
+            header:{
+               rows: 1
+            },
+             
+            // Mapping columns to keys
+            columnToKey: {
+                A: 'trackId',
+                B: 'trackId',
+                C:  'trackId'
+            }
         }]
     });
   
