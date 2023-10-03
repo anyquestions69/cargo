@@ -63,7 +63,8 @@ const userSchema = new Schema({
   manager:{
     type:Boolean,
     default:false
-  }
+  },
+  orders:[{ type: Schema.Types.ObjectId, ref: 'User' }]
 })
 
 

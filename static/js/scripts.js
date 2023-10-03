@@ -36,7 +36,27 @@ async function showUser(){
     let r = await res.json()
     console.log(r)
     $('#email').val(r.email)
-    $('#address').val(res.place)}
+    $('#address').val(r.place)
+    console.log(r.orders)
+    for(let o of r.orders){
+        $('#orders').append(`
+        
+            <a href="/order?id=${o.trackId}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+            <img src="https://github.com/twbs.png" alt="twbs" width="32" height="32" class="rounded-circle flex-shrink-0">
+            <div class="d-flex gap-2 w-100 justify-content-between">
+              <div>
+                <h6 class="mb-0">${o.trackId}</h6>
+                <p class="mb-0 opacity-75">${o.points[parseInt(o.status)].place||o.receiver.place}</p>
+                </div>
+                <small class="opacity-50 text-nowrap">${o.points[parseInt(o.status)].status||'Доставлено'}</small>
+              </div>
+              
+            </div>
+          </a>
+            
+        `)
+    }
+}
 
 async function deleteAccount(){
     let res = await fetch('/api/users/', {

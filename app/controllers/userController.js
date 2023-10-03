@@ -1,4 +1,4 @@
-const {User} = require('../models/user')
+const {User, Order} = require('../models/user')
 const jwt = require('jsonwebtoken')
 
 const getPagingData = (data, page, limit) => {
@@ -34,6 +34,38 @@ class Manager{
         }
         
     }
+
+    async addOrder(req,res){
+        try{
+            let trackId = req.params['trackId']
+            let order =  await Order.findOne({trackId:trackId})
+            let user = await User.findOne({email:req.user.email})
+            user.orders.push(order)
+            console.log(user)
+            await user.save()
+           
+            return res.send(order)
+        }catch(e){
+            console.log(e)
+            return res.status(404).send('Ошибка')
+        }
+        
+    }
+
+    async showOrders(req,res){
+        try{
+          
+            let user = await User.findOne({email:req.user.email})
+           console.log(user)
+           return res.send(user.orders)
+           
+        }catch(e){
+            console.log(e)
+            return res.status(404).send('Ошибка')
+        }
+        
+    }
+   
 
     async profile(req,res){
         try{

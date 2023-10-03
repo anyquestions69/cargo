@@ -1,9 +1,15 @@
 async function show(){
+  $('#orderList').empty()
+  var input = $('#searchInput').val()
+  var address = '/api/orders'
+  if(input!=''){
+    address= '/api/orders/find/'+input
+  }
   let role = await fetch('/api/users/checkRole', {method:'PUT'})
   if( role.ok){
     let rtext= await role.text()
     if(rtext=='admin'){
-    let response = await fetch('/api/orders/',{
+    let response = await fetch(address,{
         method: 'GET',
         headers: {
           'Content-Type': 'application/json;charset=utf-8'
@@ -204,4 +210,8 @@ $('#importXls').on('submit', async (e)=>{
   let text = await response.json()
   console.log(text)
   location.reload()
+})
+$('#searchButton').on('click', ()=>{
+
+  show()
 })

@@ -53,6 +53,18 @@ class Manager{
         }
         
     }
+    async getLike(req,res){
+        try{
+            let trackId = req.params['trackId']
+            let order = await Order.find({trackId:{$regex:trackId}})
+            if(!order)
+                return res.status(404).send('Такого заказа нет')
+            return res.send(order)
+        }catch(e){
+            console.log(e)
+            return res.status(404).send('Ошибка')
+        }
+    }
     async nextPoint(req,res){
         try {
             let trackId = req.params['trackId']

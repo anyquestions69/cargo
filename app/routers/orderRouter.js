@@ -8,6 +8,7 @@ orderRouter.get("/", mw.isAuth, mw.isAdminOrManager, orderController.getAll);
 orderRouter.get("/manager", mw.isAuth, mw.isAdminOrManager, orderController.getAllForManager);
 orderRouter.get("/:trackId", orderController.getOne);
 orderRouter.get("/check/:trackId", mw.isAuth, mw.isAdminOrManager, orderController.checkPrevilege);
+orderRouter.get('/find/:trackId', mw.isAuth, orderController.getLike)
 
 orderRouter.post('/', mw.isAuth, mw.isAdmin, orderController.add)
 orderRouter.post('/:trackId', mw.isAuth, mw.isAdminOrManager, orderController.update)
